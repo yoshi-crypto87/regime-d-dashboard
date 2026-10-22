@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-21",
+  "equity": 50021.45,
+  "cash": 50021.45,
+  "eth_qty": 0.0,
+  "profit": 21.45,
+  "return_pct": 0.043,
+  "completed_trades": 1,
+  "wins": 1,
+  "win_rate": 100.0,
+  "max_drawdown": -0.045,
+  "action": "SELL",
+  "regime": "up",
+  "strategy": "MA20/50",
+  "signal": "0"
+}
