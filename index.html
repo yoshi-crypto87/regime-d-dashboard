@@ -182,6 +182,20 @@
       text-align: right;
     }
 
+    .market-price {
+      font-size: clamp(19px, 5vw, 27px);
+      font-weight: 750;
+      letter-spacing: -0.5px;
+      overflow-wrap: anywhere;
+    }
+
+    .market-name {
+      color: #94a3b8;
+      font-size: 12px;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
     @media (min-width: 650px) {
       .grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -207,10 +221,33 @@
       <div class="label">現在の評価資産</div>
       <div class="balance" id="equity">-- 円</div>
       <div class="profit neutral" id="profit">-- 円</div>
-      <div class="subtitle" id="return">累計リターン --%</div>
+      <div class="subtitle" id="return">
+        累計リターン --%
+      </div>
     </section>
 
+    <h2 class="section-title">BTC・ETH 参考価格</h2>
+
     <section class="grid">
+      <div class="card">
+        <div class="market-name">BITCOIN / JPY</div>
+        <div class="market-price" id="btcPrice">-- 円</div>
+        <div class="small">BTC / bitbank</div>
+      </div>
+
+      <div class="card">
+        <div class="market-name">ETHEREUM / JPY</div>
+        <div class="market-price" id="ethPrice">-- 円</div>
+        <div class="small">ETH / bitbank</div>
+      </div>
+    </section>
+
+    <div class="small" id="priceUpdated"
+         style="margin-top:10px">
+      価格データ読み込み中...
+    </div>
+
+    <section class="grid" style="margin-top:24px">
       <div class="card">
         <div class="label">勝率</div>
         <div class="value" id="winRate">--%</div>
@@ -279,7 +316,9 @@
       </div>
       <div class="value" id="strategy">--</div>
 
-      <div class="subtitle" style="margin-top:12px" id="signal">
+      <div class="subtitle"
+           style="margin-top:12px"
+           id="signal">
         シグナル：--
       </div>
     </section>
@@ -297,6 +336,7 @@
     <footer class="footer">
       BTC / ETH REGIME D<br>
       Simulation only · No real orders<br>
+      価格は取得時点の参考値です<br>
       公開ページのため認証情報は掲載しません
     </footer>
 
@@ -309,6 +349,11 @@
       Number(value).toLocaleString("ja-JP", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
+      }) + " 円";
+
+    const marketYen = value =>
+      Number(value).toLocaleString("ja-JP", {
+        maximumFractionDigits: 0
       }) + " 円";
 
     const percent = value =>
@@ -389,6 +434,55 @@
 
         row.append(left, right);
         list.appendChild(row);
+      }
+    }
+
+    async function loadPrices() {
+      try {
+        const response = await fetch(
+          "./prices.json?t=" + Date.now(),
+          { cache: "no-store" }
+        );
+
+        if (!response.ok) {
+          throw new Error("価格データがありません");
+        }
+
+        const data = await response.json();
+
+        setText("btcPrice", marketYen(data.btc_jpy));
+        setText("ethPrice", marketYen(data.eth_jpy));
+
+        const date = new Date(data.updated_at_jst);
+
+        if (Number.isNaN(date.getTime())) {
+          throw new Error("取得日時が不正です");
+        }
+
+        const formatted = date.toLocaleString(
+          "ja-JP",
+          {
+            timeZone: "Asia/Tokyo",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit"
+          }
+        );
+
+        setText(
+          "priceUpdated",
+          "価格取得日時：" + formatted + "（日本時間）"
+        );
+
+      } catch (error) {
+        setText("btcPrice", "取得失敗");
+        setText("ethPrice", "取得失敗");
+        setText(
+          "priceUpdated",
+          "価格データを読み込めませんでした"
+        );
       }
     }
 
@@ -497,6 +591,7 @@
     }
 
     loadDashboard();
+    loadPrices();
   </script>
 </body>
 </html>
