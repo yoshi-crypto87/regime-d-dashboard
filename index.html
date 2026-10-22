@@ -196,6 +196,12 @@
       font-weight: 700;
     }
 
+    .market-change {
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
     @media (min-width: 650px) {
       .grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -214,7 +220,9 @@
         BTC市場判定 × ETH売買戦略<br>
         仮想運用パフォーマンス
       </div>
-      <div class="badge" id="updated">データ読み込み中...</div>
+      <div class="badge" id="updated">
+        データ読み込み中...
+      </div>
     </header>
 
     <section class="card">
@@ -232,12 +240,18 @@
       <div class="card">
         <div class="market-name">BITCOIN / JPY</div>
         <div class="market-price" id="btcPrice">-- 円</div>
+        <div class="market-change neutral" id="btcChange">
+          前回比：集計待ち
+        </div>
         <div class="small">BTC / bitbank</div>
       </div>
 
       <div class="card">
         <div class="market-name">ETHEREUM / JPY</div>
         <div class="market-price" id="ethPrice">-- 円</div>
+        <div class="market-change neutral" id="ethChange">
+          前回比：集計待ち
+        </div>
         <div class="small">ETH / bitbank</div>
       </div>
     </section>
@@ -245,6 +259,10 @@
     <div class="small" id="priceUpdated"
          style="margin-top:10px">
       価格データ読み込み中...
+    </div>
+
+    <div class="small" id="priceBaseline">
+      比較基準：集計待ち
     </div>
 
     <section class="grid" style="margin-top:24px">
@@ -327,7 +345,9 @@
 
     <section class="card">
       <div class="trade-list" id="tradeList">
-        <div class="subtitle">履歴を読み込み中...</div>
+        <div class="subtitle">
+          履歴を読み込み中...
+        </div>
       </div>
     </section>
 
@@ -337,6 +357,7 @@
       BTC / ETH REGIME D<br>
       Simulation only · No real orders<br>
       価格は取得時点の参考値です<br>
+      騰落率は前回取得日との比較です<br>
       公開ページのため認証情報は掲載しません
     </footer>
 
@@ -368,6 +389,42 @@
         "value " + (
           value > 0 ? "positive" :
           value < 0 ? "negative" : "neutral"
+        );
+    }
+
+    function showChange(id, value) {
+      const element = document.getElementById(id);
+
+      if (
+        value === null ||
+        value === undefined ||
+        value === ""
+      ) {
+        element.textContent = "前回比：集計待ち";
+        element.className = "market-change neutral";
+        return;
+      }
+
+      const change = Number(value);
+
+      if (!Number.isFinite(change)) {
+        element.textContent = "前回比：集計待ち";
+        element.className = "market-change neutral";
+        return;
+      }
+
+      const sign = change > 0 ? "+" : "";
+
+      element.textContent =
+        "前回比：" +
+        sign +
+        change.toFixed(2) +
+        "%";
+
+      element.className =
+        "market-change " + (
+          change > 0 ? "positive" :
+          change < 0 ? "negative" : "neutral"
         );
     }
 
@@ -430,7 +487,9 @@
 
         const price = Number(trade.eth_jpy);
         right.textContent =
-          "ETH " + price.toLocaleString("ja-JP") + " 円";
+          "ETH " +
+          price.toLocaleString("ja-JP") +
+          " 円";
 
         row.append(left, right);
         list.appendChild(row);
@@ -453,6 +512,30 @@
         setText("btcPrice", marketYen(data.btc_jpy));
         setText("ethPrice", marketYen(data.eth_jpy));
 
+        showChange(
+          "btcChange",
+          data.btc_change_24h
+        );
+
+        showChange(
+          "ethChange",
+          data.eth_change_24h
+        );
+
+        if (data.change_baseline_date) {
+          setText(
+            "priceBaseline",
+            "比較基準日：" +
+            data.change_baseline_date +
+            "（厳密な24時間比ではありません）"
+          );
+        } else {
+          setText(
+            "priceBaseline",
+            "比較基準：集計待ち"
+          );
+        }
+
         const date = new Date(data.updated_at_jst);
 
         if (Number.isNaN(date.getTime())) {
@@ -473,12 +556,15 @@
 
         setText(
           "priceUpdated",
-          "価格取得日時：" + formatted + "（日本時間）"
+          "価格取得日時：" +
+          formatted +
+          "（日本時間）"
         );
 
       } catch (error) {
         setText("btcPrice", "取得失敗");
         setText("ethPrice", "取得失敗");
+
         setText(
           "priceUpdated",
           "価格データを読み込めませんでした"
@@ -526,6 +612,7 @@
         setText("winRate", percent(data.win_rate));
         setText("trades", data.completed_trades + " 回");
         setText("drawdown", percent(data.max_drawdown));
+
         setText(
           "ethQty",
           Number(data.eth_qty).toFixed(6) + " ETH"
@@ -572,6 +659,7 @@
           "データの読み込みに失敗しました：" +
           error.message
         );
+
         setText("updated", "データ未接続");
       }
 
@@ -584,7 +672,10 @@
 
       chart.onerror = () => {
         chart.style.display = "none";
-        setText("chartMessage", "グラフはまだありません");
+        setText(
+          "chartMessage",
+          "グラフはまだありません"
+        );
       };
 
       chart.src = "./chart.png?t=" + Date.now();
