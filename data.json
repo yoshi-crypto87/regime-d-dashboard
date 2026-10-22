@@ -12,5 +12,26 @@
   "action": "SELL",
   "regime": "up",
   "strategy": "MA20/50",
-  "signal": "0"
+  "signal": "0",
+  "daily_change": {
+    "profit": 43.75,
+    "return_pct": 0.088,
+    "baseline_date": "2026-10-20"
+  },
+  "period_7d": null,
+  "period_30d": null,
+  "recent_trades": [
+    {
+      "date": "2026-10-21",
+      "action": "SELL",
+      "eth_jpy": 391575.0,
+      "equity": 50021.45
+    },
+    {
+      "date": "2026-10-20",
+      "action": "BUY",
+      "eth_jpy": 388142.0,
+      "equity": 49977.7
+    }
+  ]
 }
