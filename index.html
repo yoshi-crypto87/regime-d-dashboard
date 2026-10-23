@@ -219,6 +219,18 @@
       overflow-x: auto;
     }
 
+    .backtest-chart-wrap {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid #263349;
+    }
+
+    .backtest-chart-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
     @media (min-width: 650px) {
       .grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -332,7 +344,7 @@
       <img
         class="chart"
         id="equityChart"
-        alt="資産推移グラフ"
+        alt="仮想運用の資産推移グラフ"
         style="display:none"
       >
       <div class="subtitle" id="chartMessage">
@@ -364,6 +376,28 @@
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- 新機能：5年間の資産推移比較グラフ -->
+      <div class="backtest-chart-wrap">
+        <div class="backtest-chart-title">
+          5年間の資産推移
+        </div>
+
+        <img
+          class="chart"
+          id="backtestChart"
+          alt="Regime Dと固定MA20/50の過去5年間の資産推移比較グラフ"
+          style="display:none"
+        >
+
+        <div class="subtitle" id="backtestChartMessage">
+          比較グラフを読み込み中...
+        </div>
+
+        <div class="small">
+          緑：Regime D ／ 青：固定MA20/50
+        </div>
       </div>
 
       <div class="small" style="margin-top:16px">
@@ -646,6 +680,25 @@
       }
     }
 
+    function loadChart(imageId, messageId, filename) {
+      const chart = document.getElementById(imageId);
+
+      chart.onload = () => {
+        chart.style.display = "block";
+        setText(messageId, "");
+      };
+
+      chart.onerror = () => {
+        chart.style.display = "none";
+        setText(
+          messageId,
+          "グラフはまだありません"
+        );
+      };
+
+      chart.src = filename + "?t=" + Date.now();
+    }
+
     async function loadPrices() {
       try {
         const response = await fetch(
@@ -814,22 +867,17 @@
         setText("updated", "データ未接続");
       }
 
-      const chart = document.getElementById("equityChart");
+      loadChart(
+        "equityChart",
+        "chartMessage",
+        "./chart.png"
+      );
 
-      chart.onload = () => {
-        chart.style.display = "block";
-        setText("chartMessage", "");
-      };
-
-      chart.onerror = () => {
-        chart.style.display = "none";
-        setText(
-          "chartMessage",
-          "グラフはまだありません"
-        );
-      };
-
-      chart.src = "./chart.png?t=" + Date.now();
+      loadChart(
+        "backtestChart",
+        "backtestChartMessage",
+        "./backtest_chart.png"
+      );
     }
 
     loadDashboard();
