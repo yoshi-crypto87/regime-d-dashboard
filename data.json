@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-21",
+  "date": "2026-10-22",
   "equity": 50021.45,
   "cash": 50021.45,
   "eth_qty": 0.0,
@@ -9,14 +9,14 @@
   "wins": 1,
   "win_rate": 100.0,
   "max_drawdown": -0.045,
-  "action": "SELL",
+  "action": "HOLD",
   "regime": "up",
   "strategy": "MA20/50",
   "signal": "0",
   "daily_change": {
-    "profit": 43.75,
-    "return_pct": 0.088,
-    "baseline_date": "2026-10-20"
+    "profit": 0.0,
+    "return_pct": 0.0,
+    "baseline_date": "2026-10-21"
   },
   "period_7d": null,
   "period_30d": null,
