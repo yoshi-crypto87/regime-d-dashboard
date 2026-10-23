@@ -7,9 +7,7 @@
   <title>Regime D | Trading Dashboard</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -25,9 +23,7 @@
       padding: 24px 16px 60px;
     }
 
-    .header {
-      margin-bottom: 28px;
-    }
+    .header { margin-bottom: 28px; }
 
     .eyebrow {
       color: #94a3b8;
@@ -84,17 +80,9 @@
       margin-top: 12px;
     }
 
-    .positive {
-      color: #4ade80;
-    }
-
-    .negative {
-      color: #fb7185;
-    }
-
-    .neutral {
-      color: #cbd5e1;
-    }
+    .positive { color: #4ade80; }
+    .negative { color: #fb7185; }
+    .neutral { color: #cbd5e1; }
 
     .grid {
       display: grid;
@@ -200,6 +188,35 @@
       font-size: 13px;
       font-weight: 700;
       margin-top: 10px;
+    }
+
+    .backtest-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .backtest-table th,
+    .backtest-table td {
+      padding: 13px 8px;
+      border-bottom: 1px solid #263349;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .backtest-table th:first-child,
+    .backtest-table td:first-child {
+      text-align: left;
+      color: #94a3b8;
+    }
+
+    .backtest-table th {
+      color: #cbd5e1;
+      font-size: 12px;
+    }
+
+    .table-scroll {
+      overflow-x: auto;
     }
 
     @media (min-width: 650px) {
@@ -320,6 +337,40 @@
       >
       <div class="subtitle" id="chartMessage">
         グラフを読み込み中...
+      </div>
+    </section>
+
+    <h2 class="section-title">
+      BACKTEST｜過去5年間の戦略比較
+    </h2>
+
+    <section class="card">
+      <div class="subtitle" id="backtestPeriod">
+        バックテスト結果を読み込み中...
+      </div>
+
+      <div class="table-scroll" style="margin-top:14px">
+        <table class="backtest-table">
+          <thead>
+            <tr>
+              <th>指標</th>
+              <th>Regime D</th>
+              <th>固定MA20/50</th>
+            </tr>
+          </thead>
+          <tbody id="backtestBody">
+            <tr>
+              <td colspan="3">読み込み中...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="small" style="margin-top:16px">
+        過去データによる仮想検証です。<br>
+        翌日の日足始値で約定したと仮定しています。<br>
+        現在の仮想運用とは約定条件が異なります。<br>
+        過去の成績は将来の利益を保証しません。
       </div>
     </section>
 
@@ -496,6 +547,105 @@
       }
     }
 
+    function showBacktest(backtest) {
+      const body = document.getElementById("backtestBody");
+      body.replaceChildren();
+
+      if (
+        !backtest ||
+        !backtest["Regime D"] ||
+        !backtest["Fixed MA20/50"]
+      ) {
+        setText(
+          "backtestPeriod",
+          "バックテスト結果はまだありません"
+        );
+
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        cell.colSpan = 3;
+        cell.textContent = "集計待ち";
+        row.appendChild(cell);
+        body.appendChild(row);
+        return;
+      }
+
+      const regime = backtest["Regime D"];
+      const fixed = backtest["Fixed MA20/50"];
+
+      setText(
+        "backtestPeriod",
+        "検証期間：" +
+        regime.start +
+        " 〜 " +
+        regime.end
+      );
+
+      const metrics = [
+        [
+          "累計リターン",
+          regime.total_return_pct,
+          fixed.total_return_pct,
+          "%"
+        ],
+        [
+          "最終資産",
+          regime.final_equity,
+          fixed.final_equity,
+          "yen"
+        ],
+        [
+          "最大DD",
+          regime.max_drawdown_pct,
+          fixed.max_drawdown_pct,
+          "%"
+        ],
+        [
+          "勝率",
+          regime.win_rate_pct,
+          fixed.win_rate_pct,
+          "%"
+        ],
+        [
+          "完了取引",
+          regime.completed_trades,
+          fixed.completed_trades,
+          "count"
+        ]
+      ];
+
+      for (const [label, a, b, type] of metrics) {
+        const row = document.createElement("tr");
+
+        const labelCell = document.createElement("td");
+        labelCell.textContent = label;
+        row.appendChild(labelCell);
+
+        for (const value of [a, b]) {
+          const cell = document.createElement("td");
+
+          if (value === null || value === undefined) {
+            cell.textContent = "--";
+          } else if (type === "yen") {
+            cell.textContent = marketYen(value);
+          } else if (type === "count") {
+            cell.textContent = value + " 回";
+          } else {
+            const sign = (
+              label === "累計リターン" && value > 0
+            ) ? "+" : "";
+
+            cell.textContent =
+              sign + Number(value).toFixed(2) + "%";
+          }
+
+          row.appendChild(cell);
+        }
+
+        body.appendChild(row);
+      }
+    }
+
     async function loadPrices() {
       try {
         const response = await fetch(
@@ -652,6 +802,7 @@
         );
 
         showTrades(data.recent_trades);
+        showBacktest(data.backtest);
 
       } catch (error) {
         setText(

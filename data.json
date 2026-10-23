@@ -33,5 +33,27 @@
       "eth_jpy": 388142.0,
       "equity": 49977.7
     }
-  ]
+  ],
+  "backtest": {
+    "Regime D": {
+      "start": "2021-10-11",
+      "end": "2026-10-10",
+      "initial_cash": 50000.0,
+      "final_equity": 59337.0,
+      "total_return_pct": 18.674,
+      "max_drawdown_pct": -5.169,
+      "completed_trades": 20,
+      "win_rate_pct": 60.0
+    },
+    "Fixed MA20/50": {
+      "start": "2021-10-11",
+      "end": "2026-10-10",
+      "initial_cash": 50000.0,
+      "final_equity": 57859.91,
+      "total_return_pct": 15.72,
+      "max_drawdown_pct": -5.283,
+      "completed_trades": 17,
+      "win_rate_pct": 52.94
+    }
+  }
 }
