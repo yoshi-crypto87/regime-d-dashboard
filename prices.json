@@ -1,8 +1,8 @@
 {
-  "updated_at_jst": "2026-10-24T10:34:00+09:00",
-  "btc_jpy": 12682977.0,
-  "eth_jpy": 373000.0,
-  "btc_change_24h": -0.91,
-  "eth_change_24h": -0.884,
-  "change_baseline_date": "2026-10-23"
+  "updated_at_jst": "2026-10-25T10:26:53+09:00",
+  "btc_jpy": 12689039.0,
+  "eth_jpy": 370223.0,
+  "btc_change_24h": 0.048,
+  "eth_change_24h": -0.745,
+  "change_baseline_date": "2026-10-24"
 }
