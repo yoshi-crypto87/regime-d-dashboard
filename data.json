@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-01",
+  "date": "2026-11-02",
   "equity": 50021.45,
   "cash": 50021.45,
   "eth_qty": 0.0,
@@ -10,18 +10,18 @@
   "win_rate": 100.0,
   "max_drawdown": -0.045,
   "action": "HOLD",
-  "regime": "up",
-  "strategy": "MA20/50",
+  "regime": "other",
+  "strategy": "MA25/60",
   "signal": "0",
   "daily_change": {
     "profit": 0.0,
     "return_pct": 0.0,
-    "baseline_date": "2026-10-31"
+    "baseline_date": "2026-11-01"
   },
   "period_7d": {
     "profit": 0.0,
     "return_pct": 0.0,
-    "baseline_date": "2026-10-25"
+    "baseline_date": "2026-10-26"
   },
   "period_30d": null,
   "recent_trades": [
