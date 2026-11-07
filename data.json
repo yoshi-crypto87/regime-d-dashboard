@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-05",
+  "date": "2026-11-06",
   "equity": 50021.45,
   "cash": 50021.45,
   "eth_qty": 0.0,
@@ -16,12 +16,12 @@
   "daily_change": {
     "profit": 0.0,
     "return_pct": 0.0,
-    "baseline_date": "2026-11-04"
+    "baseline_date": "2026-11-05"
   },
   "period_7d": {
     "profit": 0.0,
     "return_pct": 0.0,
-    "baseline_date": "2026-10-29"
+    "baseline_date": "2026-10-30"
   },
   "period_30d": null,
   "recent_trades": [
@@ -43,9 +43,9 @@
       "start": "2021-10-11",
       "end": "2026-10-10",
       "initial_cash": 50000.0,
-      "final_equity": 59337.0,
-      "total_return_pct": 18.674,
-      "max_drawdown_pct": -5.169,
+      "final_equity": 59855.91,
+      "total_return_pct": 19.712,
+      "max_drawdown_pct": -5.192,
       "completed_trades": 20,
       "win_rate_pct": 60.0
     },
@@ -53,9 +53,9 @@
       "start": "2021-10-11",
       "end": "2026-10-10",
       "initial_cash": 50000.0,
-      "final_equity": 57859.91,
-      "total_return_pct": 15.72,
-      "max_drawdown_pct": -5.283,
+      "final_equity": 58170.9,
+      "total_return_pct": 16.342,
+      "max_drawdown_pct": -6.004,
       "completed_trades": 17,
       "win_rate_pct": 52.94
     }
