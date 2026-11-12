@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-10",
+  "date": "2026-11-11",
   "equity": 50021.45,
   "cash": 50021.45,
   "eth_qty": 0.0,
@@ -16,12 +16,12 @@
   "daily_change": {
     "profit": 0.0,
     "return_pct": 0.0,
-    "baseline_date": "2026-11-09"
+    "baseline_date": "2026-11-10"
   },
   "period_7d": {
     "profit": 0.0,
     "return_pct": 0.0,
-    "baseline_date": "2026-11-03"
+    "baseline_date": "2026-11-04"
   },
   "period_30d": null,
   "recent_trades": [
